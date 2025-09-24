@@ -11,6 +11,8 @@ enum HomeStatus {
 sealed class HomeState with _$HomeState {
   const factory HomeState({
     @Default(HomeStatus.initial) HomeStatus status,
+    @Default(null) HomeResponse? homeResponse,
+    String? error,
   }) = _HomeState;
 
   factory HomeState.initial() => const HomeState();

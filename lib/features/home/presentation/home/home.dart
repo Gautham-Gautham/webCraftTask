@@ -7,14 +7,15 @@ export 'home_mobile.dart';
 export 'home_web.dart';
 
 class HomeScreen extends ConsumerWidget {
-  const HomeScreen({super.key});
+  const HomeScreen({super.key, required this.token});
+  final String token;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return const Scaffold(
+    return Scaffold(
       body: ResponsiveWidget(
-        smallScreen: HomeScreenMobile(),
-        largeScreen: HomeScreenWeb(),
+        smallScreen: HomeScreenMobile(token: token),
+        largeScreen: const HomeScreenWeb(),
       ),
     );
   }

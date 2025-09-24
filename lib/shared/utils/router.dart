@@ -1,4 +1,5 @@
 import 'package:app/features/home/home.dart';
+import 'package:app/features/login/presentation/login/login.dart';
 import 'package:app/shared/shared.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -68,8 +69,16 @@ class AppRouter {
     routes: [
       GoRoute(
         path: '/',
+        name: login,
+        builder: (context, state) => const LoginScreen(),
+      ),
+      GoRoute(
+        path: '/$home/:token',
         name: home,
-        builder: (context, state) => const HomeScreen(),
+        builder: (context, state) {
+          final token = state.pathParameters['token'] ?? '';
+          return HomeScreen(token: token);
+        },
       ),
       // GoRoute(
       //   path: supabaseUpload,

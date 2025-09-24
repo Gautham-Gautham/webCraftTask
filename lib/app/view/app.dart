@@ -1,5 +1,6 @@
 import 'package:app/env.dart';
 import 'package:app/shared/shared.dart';
+import 'package:app/shared/utils/fonts.gen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hancod_theme/hancod_theme.dart';
@@ -31,7 +32,11 @@ class App extends ConsumerWidget {
         child: MaterialApp.router(
           routerConfig: appRouter.router,
           debugShowCheckedModeBanner: false,
-          theme: ref.watch(themeProvider),
+          theme: ref.watch(themeProvider).copyWith(
+                textTheme: ref.watch(themeProvider).textTheme.apply(
+                      fontFamily: FontFamily.montserrat,
+                    ),
+              ),
           title: 'App',
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
