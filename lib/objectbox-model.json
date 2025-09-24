@@ -1,0 +1,143 @@
+{
+  "_note1": "KEEP THIS FILE! Check it into a version control system (VCS) like git.",
+  "_note2": "ObjectBox manages crucial IDs for your object model. See docs for details.",
+  "_note3": "If you have VCS merge conflicts, you must resolve them according to ObjectBox docs.",
+  "entities": [
+    {
+      "id": "1:4086584475367294057",
+      "lastPropertyId": "6:478014075826004592",
+      "name": "SyncQueue",
+      "properties": [
+        {
+          "id": "1:8621194800187511300",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:8953385255906852167",
+          "name": "taskUuid",
+          "type": 9
+        },
+        {
+          "id": "3:5202223877129955312",
+          "name": "action",
+          "type": 9
+        },
+        {
+          "id": "4:3908696601736050921",
+          "name": "data",
+          "type": 9
+        },
+        {
+          "id": "5:3890250870994470952",
+          "name": "timestamp",
+          "type": 10
+        },
+        {
+          "id": "6:478014075826004592",
+          "name": "retryCount",
+          "type": 6
+        }
+      ],
+      "relations": []
+    },
+    {
+      "id": "2:8566237258308622632",
+      "lastPropertyId": "10:5723254613913523831",
+      "name": "Task",
+      "properties": [
+        {
+          "id": "1:477845122589194359",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:1541077423661727623",
+          "name": "uuid",
+          "type": 9,
+          "flags": 2080,
+          "indexId": "1:2314315292400062355"
+        },
+        {
+          "id": "3:8043367959182560582",
+          "name": "title",
+          "type": 9
+        },
+        {
+          "id": "4:3835796488197737652",
+          "name": "description",
+          "type": 9
+        },
+        {
+          "id": "5:3697705105169050839",
+          "name": "isCompleted",
+          "type": 1
+        },
+        {
+          "id": "6:7012449523311669046",
+          "name": "createdAt",
+          "type": 10
+        },
+        {
+          "id": "7:544973592566321019",
+          "name": "updatedAt",
+          "type": 10
+        },
+        {
+          "id": "8:8617597905447185517",
+          "name": "isSynced",
+          "type": 1
+        },
+        {
+          "id": "9:5048292457205927059",
+          "name": "isDeleted",
+          "type": 1
+        },
+        {
+          "id": "10:5723254613913523831",
+          "name": "syncAction",
+          "type": 9
+        }
+      ],
+      "relations": []
+    },
+    {
+      "id": "3:5663605363002806460",
+      "lastPropertyId": "3:7092833024648827009",
+      "name": "itemModel",
+      "flags": 2,
+      "properties": [
+        {
+          "id": "1:4255799321001589159",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:1060527931959535194",
+          "name": "itemName",
+          "type": 9
+        },
+        {
+          "id": "3:7092833024648827009",
+          "name": "itemDescription",
+          "type": 9
+        }
+      ],
+      "relations": []
+    }
+  ],
+  "lastEntityId": "3:5663605363002806460",
+  "lastIndexId": "1:2314315292400062355",
+  "lastRelationId": "0:0",
+  "lastSequenceId": "0:0",
+  "modelVersion": 5,
+  "modelVersionParserMinimum": 5,
+  "retiredEntityUids": [],
+  "retiredIndexUids": [],
+  "retiredPropertyUids": [],
+  "retiredRelationUids": [],
+  "version": 1
+}
