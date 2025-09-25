@@ -1,14 +1,9 @@
 import 'package:app/features/login/controller/login/login_notifier.dart';
-import 'package:app/shared/shared.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
-import 'package:go_router/go_router.dart';
-import 'package:hancod_theme/buttons.dart';
-import 'package:hancod_theme/colors.dart';
 import 'package:hancod_theme/hancod_theme.dart';
-import 'package:hancod_theme/text.dart';
 
 class LoginScreenMobile extends ConsumerStatefulWidget {
   const LoginScreenMobile({super.key});
@@ -28,7 +23,7 @@ class _LoginScreenMobileState extends ConsumerState<LoginScreenMobile> {
         child: Center(
           child: SingleChildScrollView(
             child: Padding(
-              padding: const EdgeInsets.all(16.0),
+              padding: const EdgeInsets.all(16),
               child: ConstrainedBox(
                 constraints: const BoxConstraints(maxWidth: 400),
                 child: Column(
@@ -228,8 +223,10 @@ class _LoginScreenMobileState extends ConsumerState<LoginScreenMobile> {
                                 borderRadius: BorderRadius.circular(8),
                               ),
                             ),
-                            child: const Text('Apple',
-                                style: TextStyle(color: AppColors.greyText)),
+                            child: const Text(
+                              'Apple',
+                              style: TextStyle(color: AppColors.greyText),
+                            ),
                           ),
                         ),
                       ],

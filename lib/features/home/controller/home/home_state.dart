@@ -12,6 +12,8 @@ sealed class HomeState with _$HomeState {
   const factory HomeState({
     @Default(HomeStatus.initial) HomeStatus status,
     @Default(null) HomeResponse? homeResponse,
+    @Default('') String searchQuery,
+    @Default(null) HomeResponse? originalHomeResponse,
     String? error,
   }) = _HomeState;
 

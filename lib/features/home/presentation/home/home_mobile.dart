@@ -1,14 +1,18 @@
 import 'package:app/features/home/controller/home/home_notifier.dart';
 import 'package:app/features/home/domain/models/home_response/home_response_model.dart';
+import 'package:app/features/home/presentation/home/widgets/product_card.dart';
+
 import 'package:app/shared/utils/assets.gen.dart';
 import 'package:app/shared/utils/fonts.gen.dart';
 import 'package:flutter/material.dart' hide Banner;
-import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hancod_theme/hancod_theme.dart';
 
 class HomeScreenMobile extends ConsumerStatefulWidget {
-  const HomeScreenMobile({super.key, required this.token});
+  const HomeScreenMobile({
+    required this.token,
+    super.key,
+  });
   final String token;
 
   @override
@@ -16,9 +20,26 @@ class HomeScreenMobile extends ConsumerStatefulWidget {
 }
 
 class _HomeScreenMobileState extends ConsumerState<HomeScreenMobile> {
+  final _searchController = TextEditingController();
+
   @override
   void initState() {
     super.initState();
+    _searchController.addListener(_onSearchChanged);
+  }
+
+  @override
+  void dispose() {
+    _searchController
+      ..removeListener(_onSearchChanged)
+      ..dispose();
+    super.dispose();
+  }
+
+  void _onSearchChanged() {
+    final query = _searchController.text;
+
+    ref.read(homeNotifierProvider(widget.token).notifier).search(query);
   }
 
   @override
@@ -71,6 +92,7 @@ class _HomeScreenMobileState extends ConsumerState<HomeScreenMobile> {
                   flex: 3,
                   child: AppTextForm<String>(
                     name: 'search',
+                    controller: _searchController,
                     decoration: InputDecoration(
                       labelText: 'Search...',
                       prefixIconConstraints:
@@ -129,7 +151,10 @@ class _HomeScreenMobileState extends ConsumerState<HomeScreenMobile> {
                     icon: Assets.icons.barcodeScanner.svg(
                       height: 24,
                       width: 24,
-                      color: AppColors.white,
+                      colorFilter: const ColorFilter.mode(
+                        AppColors.white,
+                        BlendMode.srcIn,
+                      ),
                     ),
                     label: const Text('Scan here'),
                   ),
@@ -178,6 +203,7 @@ class _HomeScreenMobileState extends ConsumerState<HomeScreenMobile> {
         return _buildCollectionSection(
           field.name ?? 'Products',
           field.products ?? [],
+          widget.token,
         );
       case 'banner-grid':
         return _buildBannerGrid(field.banners ?? []);
@@ -196,12 +222,14 @@ class _HomeScreenMobileState extends ConsumerState<HomeScreenMobile> {
         children: [
           Text(
             title,
-            style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            style: AppText.xLargeSB.copyWith(
+              color: AppColors.black,
+            ),
           ),
-          const Text(
+          Text(
             'View All',
-            style: TextStyle(
-              color: Colors.grey,
+            style: AppText.mediumM.copyWith(
+              color: AppColors.grey,
               decoration: TextDecoration.underline,
             ),
           ),
@@ -250,8 +278,6 @@ class _HomeScreenMobileState extends ConsumerState<HomeScreenMobile> {
   }
 
   Widget _buildCategoriesSection(List<Category> categories) {
-    // Using placeholder images for categories as they are not in the JSON
-
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -305,7 +331,7 @@ class _HomeScreenMobileState extends ConsumerState<HomeScreenMobile> {
               image: NetworkImage(imageUrl),
               fit: BoxFit.cover,
               colorFilter: ColorFilter.mode(
-                Colors.black.withOpacity(0.5),
+                Colors.black.withValues(alpha: 0.5),
                 BlendMode.darken,
               ),
             ),
@@ -316,25 +342,20 @@ class _HomeScreenMobileState extends ConsumerState<HomeScreenMobile> {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Text(
+                Text(
                   'Request for quote',
-                  style: TextStyle(
-                    fontSize: 22,
+                  style: AppText.b28.copyWith(
                     color: Colors.white,
-                    fontWeight: FontWeight.bold,
                   ),
                 ),
                 const SizedBox(height: 16),
-                ElevatedButton(
-                  onPressed: () {},
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.white,
-                    foregroundColor: Colors.black,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20),
-                    ),
+                AppButton(
+                  color: AppColors.white,
+                  onPress: () {},
+                  label: Text(
+                    'Create RFQ',
+                    style: AppText.mediumSB.copyWith(color: AppColors.black),
                   ),
-                  child: const Text('Create RFQ'),
                 ),
               ],
             ),
@@ -344,7 +365,11 @@ class _HomeScreenMobileState extends ConsumerState<HomeScreenMobile> {
     );
   }
 
-  Widget _buildCollectionSection(String title, List<Product> products) {
+  Widget _buildCollectionSection(
+    String title,
+    List<Product> products,
+    String token,
+  ) {
     return Column(
       children: [
         _buildSectionHeader(title),
@@ -355,7 +380,7 @@ class _HomeScreenMobileState extends ConsumerState<HomeScreenMobile> {
             padding: const EdgeInsets.symmetric(horizontal: 12),
             itemCount: products.length,
             itemBuilder: (context, index) {
-              return ProductCard(product: products[index]);
+              return ProductCard(product: products[index], token: token);
             },
           ),
         ),
@@ -379,8 +404,9 @@ class _HomeScreenMobileState extends ConsumerState<HomeScreenMobile> {
                       children: [
                         Image.network(
                           banner.image!,
+                          width: double.infinity,
                           height: 200,
-                          fit: BoxFit.cover,
+                          fit: BoxFit.fill,
                           errorBuilder: (context, error, stackTrace) {
                             return const Icon(Icons.error);
                           },
@@ -397,13 +423,12 @@ class _HomeScreenMobileState extends ConsumerState<HomeScreenMobile> {
                         ),
                         Padding(
                           padding: const EdgeInsets.all(12),
-                          child: ElevatedButton(
-                            onPressed: () {},
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.white,
-                              foregroundColor: Colors.black,
+                          child: Text(
+                            'View All',
+                            style: AppText.mediumSB.copyWith(
+                              color: AppColors.white,
+                              decoration: TextDecoration.underline,
                             ),
-                            child: const Text('Shop Now'),
                           ),
                         ),
                       ],
@@ -454,161 +479,6 @@ class _HomeScreenMobileState extends ConsumerState<HomeScreenMobile> {
             ),
           );
         },
-      ),
-    );
-  }
-}
-
-class ProductCard extends StatelessWidget {
-  final Product product;
-  const ProductCard({super.key, required this.product});
-
-  @override
-  Widget build(BuildContext context) {
-    final hasCartItem = (product.cartCount ?? 0) > 0;
-
-    return Container(
-      width: 180,
-      margin: const EdgeInsets.symmetric(horizontal: 4),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Stack(
-            children: [
-              Container(
-                height: 180,
-                decoration: BoxDecoration(
-                  color: Colors.grey.shade100,
-                  borderRadius: BorderRadius.circular(12),
-                  border: Border.all(color: Colors.grey.shade200),
-                ),
-                child: Center(
-                  child: Image.network(
-                    product.image!,
-                    height: 140,
-                    errorBuilder: (context, error, stackTrace) {
-                      return const Icon(Icons.error);
-                    },
-                  ),
-                ),
-              ),
-              Positioned(
-                left: 8,
-                top: 8,
-                child: Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                  decoration: BoxDecoration(
-                    color: Colors.green.shade100,
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: Text(
-                    product.offer ?? 'SALE',
-                    style: TextStyle(
-                      color: Colors.green.shade800,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 12,
-                    ),
-                  ),
-                ),
-              ),
-              const Positioned(
-                right: 8,
-                top: 8,
-                child: Icon(Icons.favorite_border),
-              ),
-            ],
-          ),
-          Padding(
-            padding: const EdgeInsets.all(8),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  product.name ?? 'No Name',
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                ),
-                const SizedBox(height: 4),
-                Row(
-                  children: [
-                    Text(
-                      '${product.currency} ${product.actualPrice}',
-                      style: const TextStyle(
-                        decoration: TextDecoration.lineThrough,
-                        color: Colors.grey,
-                      ),
-                    ),
-                    const SizedBox(width: 8),
-                    Text(
-                      '${product.currency} ${product.price}',
-                      style: const TextStyle(fontWeight: FontWeight.bold),
-                    ),
-                  ],
-                ),
-                Text(
-                  product.unit ?? '',
-                  style: TextStyle(color: Colors.grey.shade600, fontSize: 12),
-                ),
-              ],
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                OutlinedButton(
-                  onPressed: () {},
-                  child: const Text(
-                    'RFQ',
-                    style: TextStyle(color: Colors.black),
-                  ),
-                ),
-                const SizedBox(width: 4),
-                Expanded(
-                  child: hasCartItem
-                      ? _buildQuantitySelector()
-                      : _buildAddToCartButton(),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildAddToCartButton() {
-    return ElevatedButton(
-      onPressed: () {},
-      style: ElevatedButton.styleFrom(
-        backgroundColor: AppColors.primaryColor,
-        foregroundColor: Colors.white,
-      ),
-      child: const Text('Add', style: TextStyle(fontSize: 12)),
-    );
-  }
-
-  Widget _buildQuantitySelector() {
-    return Container(
-      decoration: BoxDecoration(
-        color: AppColors.primaryColor,
-        borderRadius: BorderRadius.circular(30),
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          const Icon(Icons.remove, color: Colors.white, size: 16),
-          Text(
-            '${product.cartCount}',
-            style: const TextStyle(
-              color: Colors.white,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          const Icon(Icons.add, color: Colors.white, size: 16),
-        ],
       ),
     );
   }
